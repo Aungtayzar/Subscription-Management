@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "second-project",
-    "slug": "second-project",
+    "slug": "subscription-management",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ea9bd4d4-0814-47af-952a-ae4a0fa051b5"
+      }
+    },
+    "owner": "tayzar123"
   }
 }
