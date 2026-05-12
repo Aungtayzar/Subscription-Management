@@ -16,7 +16,6 @@
   --color-destructive: #dc2626;
   --color-subscription: #8fd1bd;
 
-  --spacing-0: 0px;
   --spacing-1: 4px;
   --spacing-2: 8px;
   --spacing-3: 12px;
@@ -78,7 +77,7 @@
   }
 
   .home-add-icon {
-    @apply size-12;
+    @apply size-10;
   }
 
   .home-balance-card {
