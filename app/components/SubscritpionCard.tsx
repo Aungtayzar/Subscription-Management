@@ -71,7 +71,7 @@ const SubscritpionCard = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {category?.trim() || plan?.trim()}
+                  {category?.trim() || plan?.trim() || "N/A"}
                 </Text>
               </View>
             </View>
