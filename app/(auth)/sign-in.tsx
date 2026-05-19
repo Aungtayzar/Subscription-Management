@@ -10,6 +10,15 @@ import {
   View,
 } from "react-native";
 
+function sanitizeClerkError(error: unknown, email?: string) {
+  const err = error as Record<string, unknown> | undefined;
+  return {
+    message: err?.message ?? String(error),
+    code: err?.code ?? undefined,
+    email: email ? `${email.slice(0, 3)}***` : undefined,
+  };
+}
+
 // ── Brand tokens ────────────────────────────────────────────────
 const CREAM = "#F5F0E8";
 const ORANGE = "#D4714A";
@@ -30,7 +39,7 @@ export default function Page() {
   const handleSubmit = async () => {
     const { error } = await signIn.password({ emailAddress, password });
     if (error) {
-      console.error(JSON.stringify(error, null, 2));
+      console.error(sanitizeClerkError(error, emailAddress));
       return;
     }
 
@@ -38,7 +47,6 @@ export default function Page() {
       await signIn.finalize({
         navigate: ({ session, decorateUrl }) => {
           if (session?.currentTask) {
-            console.log(session?.currentTask);
             return;
           }
           const url = decorateUrl("/");
@@ -57,7 +65,7 @@ export default function Page() {
       );
       if (emailCodeFactor) await signIn.mfa.sendEmailCode();
     } else {
-      console.error("Sign-in attempt not complete:", signIn);
+      console.error("Sign-in attempt not complete, status:", signIn.status);
     }
   };
 
@@ -67,7 +75,6 @@ export default function Page() {
       await signIn.finalize({
         navigate: ({ session, decorateUrl }) => {
           if (session?.currentTask) {
-            console.log(session?.currentTask);
             return;
           }
           const url = decorateUrl("/");
@@ -79,7 +86,7 @@ export default function Page() {
         },
       });
     } else {
-      console.error("Sign-in attempt not complete:", signIn);
+      console.error("Sign-in attempt not complete, status:", signIn.status);
     }
   };
 

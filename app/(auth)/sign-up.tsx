@@ -42,7 +42,18 @@ export default function Page() {
       await signUp.finalize({
         navigate: ({ session, decorateUrl }) => {
           if (session?.currentTask) {
-            console.log(session?.currentTask);
+            const taskRoutes: Record<string, string> = {
+              "setup-mfa": "/setup-mfa",
+              "choose-organization": "/choose-organization",
+              "reset-password": "/reset-password",
+            };
+            const route = taskRoutes[session.currentTask.key] || "/";
+            const taskUrl = decorateUrl(route);
+            if (taskUrl.startsWith("http")) {
+              window.location.href = taskUrl;
+            } else {
+              router.push(taskUrl as Href);
+            }
             return;
           }
           const url = decorateUrl("/");

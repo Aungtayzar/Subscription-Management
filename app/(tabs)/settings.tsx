@@ -1,11 +1,11 @@
-import React from "react";
-import { Pressable, Text } from "react-native";
 import { useAuth } from "@clerk/expo";
 import { styled } from "nativewind";
+import React from "react";
+import { Pressable, Text } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
-const settings = () => {
+const Settings = () => {
   const { signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -29,4 +29,4 @@ const settings = () => {
   );
 };
 
-export default settings;
+export default Settings;
