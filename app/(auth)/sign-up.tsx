@@ -10,6 +10,15 @@ import {
   View,
 } from "react-native";
 
+function sanitizeClerkError(error: unknown, email?: string) {
+  const err = error as Record<string, unknown> | undefined;
+  return {
+    message: err?.message ?? String(error),
+    code: err?.code ?? undefined,
+    email: email ? `${email.slice(0, 3)}***` : undefined,
+  };
+}
+
 // ── Brand tokens ────────────────────────────────────────────────
 const CREAM = "#F5F0E8";
 const ORANGE = "#D4714A";
@@ -30,7 +39,7 @@ export default function Page() {
   const handleSubmit = async () => {
     const { error } = await signUp.password({ emailAddress, password });
     if (error) {
-      console.error(JSON.stringify(error, null, 2));
+      console.error(sanitizeClerkError(error, emailAddress));
       return;
     }
     if (!error) await signUp.verifications.sendEmailCode();
@@ -65,7 +74,7 @@ export default function Page() {
         },
       });
     } else {
-      console.error("Sign-up attempt not complete:", signUp);
+      console.error("Sign-up attempt not complete, status:", signUp.status);
     }
   };
 
