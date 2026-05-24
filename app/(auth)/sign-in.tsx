@@ -1,5 +1,6 @@
 import { useSignIn } from "@clerk/expo";
 import { type Href, Link, useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import React from "react";
 import {
   Pressable,
@@ -31,6 +32,7 @@ const BORDER = "#E2D9CC";
 export default function Page() {
   const { signIn, errors, fetchStatus } = useSignIn();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -44,6 +46,8 @@ export default function Page() {
     }
 
     if (signIn.status === "complete") {
+      posthog.identify(emailAddress);
+      posthog.capture("user_signed_in", { method: "password" });
       await signIn.finalize({
         navigate: ({ session, decorateUrl }) => {
           if (session?.currentTask) {
@@ -72,6 +76,8 @@ export default function Page() {
   const handleVerify = async () => {
     await signIn.mfa.verifyEmailCode({ code });
     if (signIn.status === "complete") {
+      posthog.identify(emailAddress);
+      posthog.capture("user_signed_in", { method: "mfa_email_code" });
       await signIn.finalize({
         navigate: ({ session, decorateUrl }) => {
           if (session?.currentTask) {

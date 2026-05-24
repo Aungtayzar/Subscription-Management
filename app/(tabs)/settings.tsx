@@ -1,5 +1,6 @@
 import { useAuth } from "@clerk/expo";
 import { styled } from "nativewind";
+import { usePostHog } from "posthog-react-native";
 import React from "react";
 import { Pressable, Text } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
@@ -7,9 +8,12 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 const Settings = () => {
   const { signOut } = useAuth();
+  const posthog = usePostHog();
 
   const handleLogout = async () => {
     try {
+      posthog.capture("user_signed_out");
+      posthog.reset();
       await signOut();
     } catch (error) {
       console.error("Failed to log out:", error);

@@ -4,6 +4,7 @@ import {
   formatSubscriptionDateTime,
 } from "@/lib/utils";
 import clsx from "clsx";
+import { usePostHog } from "posthog-react-native";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
@@ -23,9 +24,22 @@ const SubscritpionCard = ({
   startDate,
   status,
 }: SubscriptionCardProps) => {
+  const posthog = usePostHog();
+
+  const handlePress = () => {
+    if (!expanded) {
+      posthog.capture("subscription_card_expanded", {
+        subscription_name: name,
+        category: category ?? plan ?? null,
+        billing_cycle: billing,
+      });
+    }
+    onPress();
+  };
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       className={clsx("sub-card", expanded ? "sub-card-expanded" : "bg-card")}
       style={!expanded && color ? { backgroundColor: color } : undefined}
     >
